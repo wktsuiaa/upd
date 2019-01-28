@@ -1,27 +1,19 @@
 package com.example.chorus.udp_test;
 
-import android.Manifest;
-import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
+import com.example.chorus.udp_test.Service.RunClient;
+import com.example.chorus.udp_test.Service.RunServer;
+import com.example.chorus.udp_test.Service.Server;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static Handler mHandler;
 
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     protected void initit_item() {
         ip = findViewById(R.id.ipAdress);
         msg= findViewById(R.id.receive);
@@ -55,14 +51,7 @@ public class MainActivity extends AppCompatActivity {
         server=findViewById(R.id.udp_server);
         client=findViewById(R.id.udp_client);
 
-        mHandler=new Handler(Looper.myLooper()){
-
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                result.append((String)msg.obj+"\n");
-            }
-        };
+        mHandler=new mHandler();
     }
 
     protected void get_IP() {
@@ -94,12 +83,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(!server.isChecked()){
-
             Intent stopIntent = new Intent(getApplicationContext(),RunServer.class);
             stopService(stopIntent);
             result.append("End Server\n");
-
         }
 
+    }
+
+    public void start_client(View view) {
+        if(client.isChecked()){
+            result.append("Starting Client\n");
+
+            Intent startIntent=new Intent(getApplicationContext(),RunClient.class);
+            startIntent.putExtra("from","Main");
+            startService(startIntent);
+        }
+
+        if(!client.isChecked()){
+            Intent stopIntent = new Intent(getApplicationContext(),RunClient.class);
+            stopService(stopIntent);
+            result.append("End Client\n");
+        }
     }
 }

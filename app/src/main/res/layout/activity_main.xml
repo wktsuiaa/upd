@@ -91,7 +91,8 @@
             android:text="Client"
             android:textOn="On"
             android:textOff="Off"
-            android:paddingLeft="20dp"/>
+            android:paddingLeft="20dp"
+            android:onClick="start_client"/>
 
     </LinearLayout>
 

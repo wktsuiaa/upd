@@ -20,8 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".RunServer"
-                 android:enabled="true"/>   />
+        <service android:name=".Service.RunServer"/>
+        <service android:name=".Service.RunClient"/>/>
     </application>
 
 </manifest>

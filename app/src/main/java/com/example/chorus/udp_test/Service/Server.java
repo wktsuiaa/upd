@@ -1,8 +1,10 @@
-package com.example.chorus.udp_test;
+package com.example.chorus.udp_test.Service;
 
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.example.chorus.udp_test.MainActivity;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -12,15 +14,18 @@ import java.net.SocketException;
 public class Server implements Runnable {
 
     int port = MainActivity.SERVERPORT;
-    String ip=MainActivity.ip.getText().toString();
-    private final static int timeout=10000;
 
-    protected void showResult(String output){
-        Handler mHandler=MainActivity.mHandler;
-        Message msg=Message.obtain();
-        msg.what=1;
-        msg.obj=output;
-        mHandler.sendMessage(msg);
+    private final static int timeout=10000;
+    private static DatagramSocket server;
+
+
+    public static void stop(){
+
+        server.close();
+
+        if(server.isClosed()){
+            Log.i("Server","Server Closed");
+        }
     }
 
     @Override
@@ -28,10 +33,10 @@ public class Server implements Runnable {
 
 
         try {
-            DatagramSocket server = new DatagramSocket(port);
+            server = new DatagramSocket(port);
 
-            showResult("Server Started at Port: "+ server.getPort());
-            showResult("Server is running");
+            Log.i("Server","Server Started at Port: "+ port);
+            Log.i("Server","Server is running\n");
 
             while(true){
                 byte[] recvBuf = new byte[1024];
@@ -43,16 +48,16 @@ public class Server implements Runnable {
                 String output=new String (result.getData(),result.getOffset(),result.getLength());
 
 
-                showResult("Received msg: "+output + "\nFrom: "+result.getAddress()+ " At Port: "+result.getPort());
+                Log.i("Server","Received msg: "+output + "\nFrom: "+result.getAddress()+ " At Port: "+result.getPort());
 
                 //Response to client
                 byte[] replybuf = new byte[1024];
-                String response="Response from Server :"+ip+" at Port: "+server.getLocalPort();
+                String response="Response from Server :"+result.getAddress()+" at Port: "+server.getLocalPort();
                 replybuf=response.getBytes();
 
                 DatagramPacket reply = new DatagramPacket(replybuf,replybuf.length,result.getAddress(),result.getPort());
                 server.send(reply);
-                showResult("Server replied");
+                Log.i("Server","Server replied");
 
             }
 

@@ -15,63 +15,70 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class Client implements Runnable {
-    DatagramSocket client = null;
+    private static DatagramSocket client = null;
     private final static int timeout=10000;
-    int port = MainActivity.SERVERPORT;
+    private int port = MainActivity.SERVERPORT;
+    private String ipAddress =MainActivity.ip.getText().toString();
+    private String msgOut=MainActivity.msg.getText().toString();
 
-    protected void showResult(String output){
-        Handler mHandler=MainActivity.mHandler;
-        Message msg=Message.obtain();
-        msg.what=1;
-        msg.obj=output;
-        mHandler.sendMessage(msg);
-        int port=MainActivity.SERVERPORT;
+    public static void stop(){
+        client.close();
+        if(client.isClosed()){
+            Log.i("Client","Client Closed");
+        }
     }
 
+    /*
+    @Server: is the target's ip address
+    @port: is the target's port listening
 
-    @Override
+ */
     public void run() {
         try{
-            //Send Package
-            /*
-                @Server: is the target's ip address
-                @port: is the target's port listening
 
-             */
-            InetAddress server = InetAddress.getByName(MainActivity.ip.getText().toString());
 
-            client=new DatagramSocket(4000);
+            InetAddress server = InetAddress.getByName(ipAddress);
+
+            client = new DatagramSocket(4000);
             client.setSoTimeout(timeout);
 
-            showResult("Client is sending to "+MainActivity.ip.getText().toString());
+            while(true) {
+                Log.i("Client","Client is sending to " + ipAddress);
 
-            String result=MainActivity.msg.getText().toString();
-            byte[] message=result.getBytes();
 
-            DatagramPacket packet=new DatagramPacket(message,message.length,server,port);
-            showResult("Client: Sending "+ new String(message)+"\n");
+                //Get the input from the editText
+                String result = msgOut;
+                byte[] message = result.getBytes();
 
-            client.send(packet);
-            showResult("Client: Message sent\n");
+                DatagramPacket packet = new DatagramPacket(message, message.length, server, port);
+                Log.i("Client","Client: Sending " + new String(message));
 
-            //Receive Package
-            byte[] recvBuf = new byte[1024];
-            DatagramPacket reply =new DatagramPacket(recvBuf,recvBuf.length);
+                client.send(packet);
+                Log.i("Client","Client: Message sent");
 
-            client.receive(reply);
-            String output=new String (reply.getData(),reply.getOffset(),reply.getLength());
+                //Receive Package
+                byte[] recvBuf = new byte[1024];
+                DatagramPacket reply = new DatagramPacket(recvBuf, recvBuf.length);
 
-            showResult("Received msg: "+output + "\nFrom: "+reply.getAddress()+ " At Port: "+reply.getPort());
+                client.receive(reply);
+                String output = new String(reply.getData(), reply.getOffset(), reply.getLength());
 
-            client.close();
+                Log.i("Client","Received msg: " + output + "From: " + reply.getAddress() + " At Port: " + reply.getPort());
+
+                //client.close();
+                Thread.sleep(1000);
+
+            }
 
         } catch (UnknownHostException e) {
             Log.e("Error",Log.getStackTraceString(e));
         } catch (SocketTimeoutException e){
-            showResult("Client: Time out\n");
+            Log.i("Client","Client: Time out\n");
             client.close();
         } catch (IOException e) {
             Log.e("Error",Log.getStackTraceString(e));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
