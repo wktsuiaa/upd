@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.example.chorus.udp_test.Service.Client;
 import com.example.chorus.udp_test.Service.RunClient;
 import com.example.chorus.udp_test.Service.RunServer;
 import com.example.chorus.udp_test.Service.Server;
+import com.example.chorus.udp_test.Service.helper.UHandler;
+import com.example.chorus.udp_test.Service.helper.UHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         initit_item();
         get_IP();
 
+        UHelper.get_IP(this);
 
     }
 
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         server=findViewById(R.id.udp_server);
         client=findViewById(R.id.udp_client);
 
-        mHandler=new mHandler();
+        mHandler=new UHandler();
     }
 
     protected void get_IP() {

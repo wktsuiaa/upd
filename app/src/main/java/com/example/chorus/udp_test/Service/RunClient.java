@@ -6,11 +6,10 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.chorus.udp_test.Client;
-import com.example.chorus.udp_test.udpThread;
+import com.example.chorus.udp_test.Service.helper.UThread;
 
 public class RunClient extends Service {
-    private udpThread client;
+    private UThread client;
     private Toast prompt;
     @Override
     public void onCreate() {
@@ -22,7 +21,7 @@ public class RunClient extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("Service","RunServer service -> onStartCommand, startId:" + startId +", Thread"+ Thread.currentThread().getName());
 
-        client= new udpThread(new Client());
+        client= new UThread(new Client());
         client.start();
         return START_NOT_STICKY;
     }

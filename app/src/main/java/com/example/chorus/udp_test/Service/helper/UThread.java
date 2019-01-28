@@ -1,12 +1,13 @@
-package com.example.chorus.udp_test;
+package com.example.chorus.udp_test.Service.helper;
 
 import android.util.Log;
 
+import com.example.chorus.udp_test.Service.Client;
 import com.example.chorus.udp_test.Service.Server;
 
-public class udpThread extends Thread {
+public class UThread extends Thread {
     private Runnable udp;
-    public udpThread(Runnable target) {
+    public UThread(Runnable target) {
         super(target);
         Log.i("Thread","Service Thread Id: "+ this.getId());
         this.udp=target;

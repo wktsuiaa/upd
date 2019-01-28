@@ -1,19 +1,30 @@
-package com.example.chorus.udp_test;
+package com.example.chorus.udp_test.Service.helper;
 
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
+import android.text.format.Formatter;
 import android.util.Log;
 
-public class mHandler extends Handler {
+import com.example.chorus.udp_test.MainActivity;
 
+import static android.content.Context.WIFI_SERVICE;
+
+public class UHandler extends Handler {
+
+    /**
     public static void showResult(String output){
-        Handler mHandler=MainActivity.mHandler;
+        Handler UHandler=MainActivity.UHandler;
         Message msg=Message.obtain();
         msg.what=1;
         msg.obj=output;
-        mHandler.sendMessage(msg);
+        UHandler.sendMessage(msg);
         int port=MainActivity.SERVERPORT;
     }
+    **/
+
+
+
 
     public void handleMessage(Message msg) {
         super.handleMessage(msg);
